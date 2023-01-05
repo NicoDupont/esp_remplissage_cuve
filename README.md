@@ -11,11 +11,12 @@ Automatique: (via capteur de niveau et parametrages dans home-assistant)
  - l'electrovanne s'ouvre à une heure déterminée si la cuve est en dessous de 90% et jusqu'a ce que la cuve soit pleine. 
  - L'electrovanne s'ouvre si la cuve descend en dessous de 10% jusqu'a ce que la cuve soit pleine + déclanchement en heure creuse uniquement. 
 
-Dégradé/Autonome: (capteur de niveau hs, homeassistant hs,etc... via l'interface web interne de l'esp)   
+Dégradé/Autonome: (capteur de niveau hs, homeassistant hs, etc... via l'interface web interne de l'esp)   
  - l'ectrovanne s'ouvre toutes les 24 heures pendant une durée déterminée.
 
-Le relais est également activable manuellement au besoin via un simple switch dans home assistant ou via l'interface web de l'esp8266.
-L'automatisme de cuve pleine stopera automatiquement le relais. 
+Manuel:  
+ - Le relais est également activable manuellement au besoin via un simple switch dans home assistant ou via l'interface web de l'esp8266.
+ L'automatisme de cuve pleine stopera automatiquement le relais. 
 
 ### Liste des composants :
 
@@ -39,8 +40,9 @@ L'automatisme de cuve pleine stopera automatiquement le relais.
 
 ### Montage :
 
-![links](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/pcb.png?raw=true)
-![links](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/inplacepcb.png?raw=true)
+![prototype](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/proto.png?raw=true)
+![final](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/pcb.png?raw=true)
+![integration](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/inplacepcb.png?raw=true)
 
 
 ### HomeAssistant :
