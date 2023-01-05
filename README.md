@@ -1,11 +1,11 @@
 ## Alimentation en eau de la cuve d'arrosage
 
-Ce petit montage est utilisé afin d'ouvrir l'electrovanne pour remplir la cuve d'eau d'arrosage.  
-Un lcd 16x2 remonte les données de monitoring.
+Ce petit montage est utilisé afin de fermer le relais qui controle l'alimentation de l'electrovanne pour remplir la cuve d'eau d'arrosage.  
+Un lcd 16x2 remonte les données de monitoring de l'arrosage.
 
 ### Fonctionnement :
 
-Mode automatique et mode degradé
+Mode automatique, dégradé et manuel
 
 Automatique: (via capteur de niveau et parametrages dans home-assistant) 
  - l'electrovanne s'ouvre à une heure déterminée si la cuve est en dessous de 90% et jusqu'a ce que la cuve soit pleine. 
@@ -28,7 +28,7 @@ L'automatisme de cuve pleine stopera automatiquement le relais.
 - 2x borniers (alim 5v)
 - 1x DHT22 (Température+Humidité boitier arrosage)
 - 1x resistance 4.7K ohm
-- 1x pcb 2.54mm
+- 1x pcb 2.54mm, du cable, etc...
 - 1x connecteur 3 pins male + femelle
 - 1x lcd 16x2 i2c (Affichage des données de monitoring de l'arrosage)
 - 1x level shifter (pour signal i2c entre l'esp(3.3v) et le lcd(5v))
