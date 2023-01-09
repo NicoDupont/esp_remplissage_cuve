@@ -44,9 +44,9 @@ GPIO 3 (RX) => Relais
 
 ### Montage :
 
-![prototype](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/proto.png?raw=true)
-![final](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/pcbok.png?raw=true)
-![integration](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/pcbbox.png?raw=true)
+![prototype](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/proto.jpg?raw=true)
+![final](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/pcbok.jpg?raw=true)
+![integration](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/pcbbox.jpg?raw=true)
 
 
 ### HomeAssistant :
