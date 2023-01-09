@@ -27,7 +27,7 @@ Manuel:
 - 1x interrupteur
 - 1x fusible 20x5 1A + porte fusible
 - 2x borniers (alim 5v)
-- 1x DHT22 (Température+Humidité boitier arrosage)
+- 1x DHT22 (Température+Humidité boitier arrosage) 
 - 1x resistance 4.7K ohm
 - 1x pcb 2.54mm, du cable, etc...
 - 1x connecteur 3 pins male + femelle
@@ -35,6 +35,9 @@ Manuel:
 - 1x level shifter (pour signal i2c entre l'esp(3.3v) et le lcd(5v))
 
 ### Cablage :
+
+le DHT22 ne fonctionne pas en 3.3v avec mon montage.   
+En 5v pas de soucis, data branché sur le level shifter.  
 
 ![links](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/shema.png?raw=true)
 
