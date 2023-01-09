@@ -25,7 +25,7 @@ Manuel:
 - 1x relais
 - 1x convertisseur dc 5v=>3.3v (ams1117)
 - 1x interrupteur
-- 1x fusible 20x5 1A + porte fusible
+- 1x fusible 20x5 0.5A + porte fusible
 - 2x borniers (alim 5v)
 - 1x DHT22 (Température+Humidité boitier arrosage) 
 - 1x resistance 4.7K ohm
@@ -36,16 +36,17 @@ Manuel:
 
 ### Cablage :
 
-le DHT22 ne fonctionne pas en 3.3v avec mon montage.   
-En 5v pas de soucis, data branché sur le level shifter.  
+GPIO 0 et 2 => i2c  
+GPIO 1 (TX) => DHT22  
+GPIO 3 (RX) => Relais  
 
 ![links](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/shema.png?raw=true)
 
 ### Montage :
 
 ![prototype](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/proto.png?raw=true)
-![final](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/pcb.png?raw=true)
-![integration](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/inplacepcb.png?raw=true)
+![final](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/pcbok.png?raw=true)
+![integration](https://github.com/NicoDupont/esp_remplissage_cuve/blob/main/img/pcbbox.png?raw=true)
 
 
 ### HomeAssistant :
