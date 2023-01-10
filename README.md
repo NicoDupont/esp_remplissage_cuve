@@ -22,11 +22,11 @@ Manuel:
 
 - 1x ftdi 3.3v (pour le 1er flash)
 - 1x esp8266 esp01s + breakout board
-- 1x relais 5v
+- 1x relais 
 - 1x convertisseur dc 5v=>3.3v (ams1117)
 - 1x interrupteur
 - 1x fusible 20x5 0.5A + porte fusible
-- 2x borniers (alim 5v)
+- 6x borniers (alim 5v)+lcd
 - 1x DHT22 (Température+Humidité boitier arrosage) 
 - 1x resistance 4.7K ohm
 - 1x pcb 2.54mm, du cable, etc...
