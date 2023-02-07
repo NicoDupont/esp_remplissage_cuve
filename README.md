@@ -8,8 +8,9 @@ Un lcd 16x2 remonte les données de monitoring de l'arrosage depuis des entités
 Mode automatique, dégradé et manuel
 
 Automatique: (via capteur de niveau et parametrages dans home-assistant) 
- - le relais se ferme à une heure déterminée si la cuve est en dessous de 90% et jusqu'a ce que la cuve soit pleine. 
- - le relais se ferme si la cuve descend en dessous de 10% jusqu'a ce que la cuve soit pleine + déclanchement en heure creuse uniquement. 
+ - le relais se ferme automatiquement selon la tarif de l'elec + % remplissage cuve + debimetre arrosage + durée max
+ - le relais s'ouvre quand % replissage = 100%
+ - notification données incohérente
 
 Dégradé/Autonome: (capteur de niveau hs, homeassistant hs, etc... via l'interface web interne de l'esp)   
  - le relais s'ouvre toutes les 24 heures pendant une durée déterminée.
@@ -57,15 +58,7 @@ GPIO 3 (RX) => Relais
 
 #### Automatismes :
 
- - ouverture relais   
-  si remplissage cuve > 98%    
-  ou  si débimetre = 0 depuis 1 minute et relais fermé  
-  ou  si relais fermé depuis plus de 2h  
-  et gestion cuve on
- - fermeture relais   
-  si heure prédéfinie et remplissage cuve < 90%  
-  ou si remplissage cuve <10% et heure creuse en cours
-  et gestion cuve on
+voir le yaml des automatismes  
 
 #### Quelques liens :
 - Home Assistant : [HomeAssistant](https://www.home-assistant.io/) 
