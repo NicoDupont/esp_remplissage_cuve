@@ -9,8 +9,8 @@ Mode automatique, dégradé et manuel
 
 Automatique: (via capteur de niveau et parametrages dans home-assistant) 
  - le relais se ferme automatiquement selon la tarif de l'elec + % remplissage cuve + debimetre arrosage + durée max
- - le relais s'ouvre quand % replissage = 100%
- - notification données incohérente
+ - le relais s'ouvre quand % remplissage = 100%
+ - notification données incohérentes
 
 Dégradé/Autonome: (capteur de niveau hs, homeassistant hs, etc... via l'interface web interne de l'esp)   
  - le relais s'ouvre toutes les 24 heures pendant une durée déterminée.
