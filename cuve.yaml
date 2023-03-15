@@ -1,0 +1,291 @@
+substitutions:
+  friendly_name: "Esp Garage Arrosage Cuve"
+  friendly_name_wifiap: "Esp-Garage-Arrosage-Cuve-Hotspot"
+  interval_update_court: "2s"
+  interval_update_normal: "60s"
+  interval_update_long: "600s"
+
+
+esphome:
+  name: esp-garage-arrosage-cuve
+  comment: esp8266 esp01s gestion electrovanne alimentation cuve eau arrosage + affichage data de monitoring de l'arrosage
+  
+  on_boot:
+    priority: 600
+    then:
+      - switch.turn_off: EspGarageArrosageCuveRelais
+
+esp8266:
+  board: esp01_1m #esp01s
+
+# Enable logging
+logger:
+  #baud_rate: 0   # disable logging via UART, help to avoid numerous crash with ESP_LOGD
+  #level: INFO   # INFO for less log
+  esp8266_store_log_strings_in_flash: False     # recommanded for ESP8266 
+
+# Enable Home Assistant API
+api:
+#  encryption:
+#    key: "/sBDRlvOwIvyGixQsC0ZL+aZNwtiCqkyR7Hm10DI1ss="
+
+ota:
+  password: "ae76fc71aa5cbefde182a261a4f7323a"
+
+wifi:
+  networks:
+  - ssid: !secret wifi_maison_ssid
+    password: !secret wifi_maison_password
+  - ssid: !secret wifi_maison_2_ssid
+    password: !secret wifi_maison_2_password
+  reboot_timeout : 2min #reboot si pas de wifi actif
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${friendly_name_wifiap}"
+    password: !secret wifi_esp_ap_password
+
+captive_portal:
+
+# enable control via web server if home assistant is dead
+web_server:
+  port: 80
+  ota: True
+  version: 1 # Defaults to 2 => 1 pour l'esp01s ou les esp8266 en général car moins gourmand
+
+
+i2c: #i2c sur gpio 0 and 2 pour le lcd 16x2
+  sda: 0
+  scl: 2
+  scan: True
+  id: bus_a # il y a un seul bus ici donc pas vraiment necessaire
+
+display:
+  - platform: lcd_pcf8574
+    dimensions: 20x4
+    i2c_id: bus_a
+    id: mylcd
+    address: 0x3F # 0x27(16x2) or 0x3F(20x4)
+    update_interval: ${interval_update_court}
+    lambda: |-
+        static int ecran = 1;
+        int nb_ecran = 13;
+
+        switch (ecran) {
+
+          case 1:
+          it.printf(0,0, "Temp Boitier :");
+          it.printf(0,1, "%.1f C", id(EspGarageArrosageCuveTempBoitierArrosage).state);
+          break;
+          
+          case 2:
+          it.printf(0,0, "Humi Boitier :");
+          it.printf(0,1, "%.1f %%", id(EspGarageArrosageCuveHumiBoitierArrosage).state);
+          break;
+
+          case 3:
+          it.printf(0,0, "Pression Am Canal");
+          it.printf(0,1, "3.0 Bar");
+          break;
+
+          case 4:
+          it.printf(0,0, "Pression Av Canal");
+          it.printf(0,1, "3.0 Bar");
+          break;
+          
+          case 5:
+          it.printf(0,0, "Pression Am Cuve");
+          it.printf(0,1, "4.0 Bar");
+          break;
+
+          case 6:
+          it.printf(0,0, "Pression Av Cuve");
+          it.printf(0,1, "4.0 Bar");
+          break;
+
+          case 7:
+          it.printf(0,0, "Debit Cuv :e");
+          it.printf(0,1, "5.1 m3-H");
+          break;
+
+          case 8:
+          it.printf(0,0, "Debit Arrosage :");
+          it.printf(0,1, "1.3 m3-H");
+          break;
+
+          case 9:
+          it.printf(0,0, "T Eau Canal :");
+          it.printf(0,1, "10 C");
+          break;
+
+          case 10:
+          it.printf(0,0, "T Eau Arrosage :");
+          it.printf(0,1, "24 C");
+          break;
+
+          case 11:
+          it.printf(0,0, "T Eau Cuve :");
+          it.printf(0,1, "25 C");
+          break;
+
+          case 12:
+          it.printf(0,0, "Alim Cuve :");
+          it.printf(0,1,"Etat - %s", id(EspGarageArrosageCuveRelais).state ? "ON" : "OFF");
+          break;
+
+          case 13:
+          it.printf(0,0, "Niveau Cuve :");
+          it.printf(0,1, "56 %% - 5.6 m3");
+          break;
+
+          default:
+          break;         
+        }
+         
+        ecran += 1;
+        if (ecran > nb_ecran) {
+          ecran = 1;
+        }
+  
+time:
+    
+  - platform: sntp
+    on_time:
+    # toutes les 24 heures à 4h du matin si mode dégradé
+      - seconds: 0
+        minutes: 0
+        hours: 4
+        then:
+         - if:
+            condition:
+             and:
+              - switch.is_off: EspGarageArrosageCuveRelais
+              - switch.is_on: EspGarageArrosageGestionCuveDegrade
+            then:
+                - switch.turn_on: EspGarageArrosageCuveRelais
+                - delay: !lambda "return id(EspGarageArrosageCuveDureeRemplissageCuve).state*60000;"
+                - switch.turn_off: EspGarageArrosageCuveRelais
+
+#--------------------------------------
+binary_sensor:
+
+  - platform: status
+    name: "${friendly_name} Status"
+    id : EspGarageArrosageCuveStatus
+    
+#--------------------------------------    
+text_sensor:
+  - platform: template
+    name: "Uptime"
+    id: uptime_human
+    icon: mdi:clock-start
+    
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} Local IP"
+      id: EspGarageArrosageCuveLocalIP
+    ssid:
+      name: "${friendly_name} SSID"
+      id: EspGarageArrosageCuveSSID
+
+#--------------------------------------
+button:
+  - platform: restart
+    name: "${friendly_name} Restart"
+    id: EspGarageArrosageCuveRestart
+  - platform: shutdown
+    name: "${friendly_name} Shutdown"
+    id: EspGarageArrosageCuveShutdown
+  - platform: safe_mode
+    name: "${friendly_name} Safe Mode"
+    id: EspGarageArrosageCuveSafeMode
+
+#--------------------------------------
+number:
+
+  - platform: template
+    name: "${friendly_name} Duree Remplissage Cuve"
+    id: EspGarageArrosageCuveDureeRemplissageCuve
+    optimistic: true
+    unit_of_measurement: 'minutes'
+    icon: mdi:timer-sand
+    min_value: 0
+    max_value: 180
+    step: 5
+    initial_value: 60
+    restore_value: true
+    mode: 'slider'
+    
+#--------------------------------------
+sensor:
+
+#--------------------------------------
+#Température / humidité centrale arrosage
+
+  - platform: dht
+    model: DHT22  #AUTO_DETECT, DHT11, DHT22, DHT22_TYPE2, AM2302, RHT03, SI7021 ne fonctionne pas si je mets autre chose que DHT22.
+    pin: 1 # pin TX gpio 1
+    temperature:
+      name: "${friendly_name} Temp Boitier Arrosage"
+      id: EspGarageArrosageCuveTempBoitierArrosage
+      filters:
+        - offset: 0
+    humidity:
+      name: "${friendly_name} Humidity Boitier Arrosage"
+      id: EspGarageArrosageCuveHumiBoitierArrosage
+      filters:
+        - offset: 0
+    update_interval: ${interval_update_normal}
+
+#--------------------------------------
+#wifi
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    id: EspGarageArrosageCuveWiFiSignal
+    update_interval: ${interval_update_long}
+
+#--------------------------------------
+#Uptime decomposé     
+  - platform: uptime
+    name: "${friendly_name} Arrosage Uptime"
+    id: EspGarageArrosageCuveUptime
+    update_interval: ${interval_update_long}
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(EspGarageArrosageCuveUptime).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "")
+              ).c_str();
+              
+#--------------------------------------
+# switch pour controler l'electrovanne en 24v ac des cuves (relais cuve de la centrale arrosage)
+switch:
+  - platform: gpio
+    pin:
+      number: 3 # # pin RX gpio 3
+      inverted: false
+    name: "${friendly_name} Cuve Relais"
+    id: EspGarageArrosageCuveRelais
+    icon: "mdi:propane-tank-outline"
+    restore_mode: "ALWAYS_OFF"
+
+# switch pour passer de mode automatique à mode degradé
+  - platform: template
+    name: "${friendly_name} Gestion Cuve Degrade"
+    id: EspGarageArrosageGestionCuveDegrade
+    icon: "mdi:home-automation"
+    restore_state: true
+    optimistic: true
+
+
+        
